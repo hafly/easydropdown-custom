@@ -20,17 +20,17 @@
 (function ($) {
 
     function EasyDropDown() {
-        this.isField = true,
-            this.enableSearch = true,
-            this.down = false,
-            this.inFocus = false,
-            this.disabled = false,
-            this.cutOff = false,
-            this.hasLabel = false,
-            this.keyboardMode = false,
-            this.nativeTouch = true,
-            this.wrapperClass = 'dropdown',
-            this.onChange = null;
+        this.isField = true;
+        this.enableSearch = true;
+        this.down = false;
+        this.inFocus = false;
+        this.disabled = false;
+        this.cutOff = false;
+        this.hasLabel = false;
+        this.keyboardMode = false;
+        this.nativeTouch = true;
+        this.wrapperClass = 'dropdown';
+        this.onChange = null;
     };
 
     EasyDropDown.prototype = {
@@ -181,7 +181,7 @@
 
             // 模糊搜索
             self.$container.find('.search>div>input').on({
-                'input.easyDropDown': function () {
+                'input propertychange.easyDropDown': function () {
                     self.$dropDown.empty();
                     var keyWord = $(this).val();
                     self.$items.each(function (index, item) {
@@ -319,15 +319,20 @@
             window.scrollTo(scrollLeft, scrollTop + scrollOffset);
             self.$container.addClass('open');
             self.$container.find('.search>div').show();
-            self.$container.find('ul').slideDown(200);
+            self.$container.find('ul').slideDown(150);
             self.down = true;
         },
 
         close: function () {
             var self = this;
             self.$container.removeClass('open');
-            self.$container.find('ul').hide();
-            self.$container.find('.search>div').hide();
+            if(self.enableSearch){
+                self.$container.find('.search>div').fadeOut(150,function () {
+                    $(this).find('input').val('').trigger('propertychange');
+                });
+            }
+
+            self.$container.find('ul').slideUp(150);
             self.focusIndex = self.selected.index;
             self.query = '';
             self.down = false;
